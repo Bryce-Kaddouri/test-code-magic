@@ -32,3 +32,22 @@ workflows:
 
           echo "Android version code incremented to $new_version_code"
           echo "iOS build number incremented to $new_build_number"
+
+        artifacts:
+          - build/**/outputs/apk/**/*.apk                   # relative path for a project in root directory
+          - subfolder_name/build/**/outputs/apk/**/*.apk    # relative path for a project in subfolder
+          - build/**/outputs/**/*.aab
+          - build/**/outputs/**/mapping.txt
+          - build/ios/ipa/*.ipa
+          - build/macos/**/*.pkg
+          - /tmp/xcodebuild_logs/*.log
+          - flutter_drive.log
+        publishing:
+          email:
+            recipients:
+              -bryce.kaddouri.dublin@gmail.com
+
+
+
+
+
