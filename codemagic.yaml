@@ -9,10 +9,26 @@ workflows:
       vars:
         IMAGE_URL: "https://food-order-prod.s3.eu-west-1.amazonaws.com/15/company/TjH7VHAnE2BdxATWIzmTu2UJTWOP1T9b7iqUCDnT.png"
     scripts:
-      - &increment_build_number       # Defined section
-          name: Increment build number
-          script: agvtool new-version -all $(($PROJECT_BUILD_NUMBER +1))
       - name: Pre-build script to update app icons and launch images
         script: |
           #!/bin/bash
           ./update_icons.sh $IMAGE_URL
+
+      - name: Increase build version
+        script: |
+          #!/bin/bash
+          
+          # Increase Android version code
+          android_manifest="android/app/build.gradle"
+          version_code=$(grep -o "versionCode [0-9]*" $android_manifest | cut -d ' ' -f 2)
+          new_version_code=$((version_code + 1))
+          sed -i '' "s/versionCode $version_code/versionCode $new_version_code/" $android_manifest
+          
+          # Increase iOS build number
+          ios_info_plist="ios/Runner/Info.plist"
+          build_number=$(/usr/libexec/PlistBuddy -c "Print CFBundleVersion" $ios_info_plist)
+          new_build_number=$((build_number + 1))
+          /usr/libexec/PlistBuddy -c "Set :CFBundleVersion $new_build_number" $ios_info_plist
+
+          echo "Android version code incremented to $new_version_code"
+          echo "iOS build number incremented to $new_build_number"
