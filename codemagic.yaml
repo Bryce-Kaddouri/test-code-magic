@@ -1,27 +1,18 @@
 workflows:
   default-workflow:
-    name: Default Workflow
+    name: Default Workflow Bryce
     max_build_duration: 60
     environment:
       flutter: stable
       xcode: latest
+      cocoapods: default
       variables:
         IMAGE_URL: "https://food-order-prod.s3.eu-west-1.amazonaws.com/15/company/TjH7VHAnE2BdxATWIzmTu2UJTWOP1T9b7iqUCDnT.png"
     scripts:
+      - &increment_build_number       # Defined section
+          name: Increment build number
+          script: agvtool new-version -all $(($PROJECT_BUILD_NUMBER +1))
       - name: Pre-build script to update app icons and launch images
         script: |
           #!/bin/bash
           ./update_icons.sh $IMAGE_URL
-    build:
-      android:
-        flavor: dev
-        build_args: --release
-      ios:
-        export_method: ad-hoc
-    artifacts:
-      - build/ios/ipa
-      - build/app/outputs/flutter-apk/*.apk
-    publishing:
-      scripts:
-        - script: |
-            echo "Publishing build artifacts..."
