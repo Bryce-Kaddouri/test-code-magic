@@ -4,6 +4,7 @@
 # This script downloads an image from a specified URL using curl and resizes it for Android and iOS app icons and launch images, with enhanced quality settings.
 
 set -o pipefail
+set -e  # Exit the script if any command fails
 
 download_image() {
     local url=$1
@@ -11,7 +12,7 @@ download_image() {
 
     if ! curl -s -o "$output_path" "$url"; then
         printf "Failed to download image from %s\n" "$url" >&2
-        return 1
+        exit 1
     fi
 }
 
@@ -26,7 +27,7 @@ resize_image() {
                                -quality 100 \
                                "$output_path"; then
         printf "Failed to resize image to %s with enhanced quality\n" "$size" >&2
-        return 1
+        exit 1
     fi
 }
 
@@ -48,7 +49,7 @@ prepare_android_icons() {
         mkdir -p "$directory"
         if ! resize_image "$input_image" "${directory}/ic_launcher.png" "$size"; then
             printf "Error creating Android icon for density %s.\n" "$density" >&2
-            return 1
+            exit 1
         fi
     done
 }
@@ -62,7 +63,7 @@ prepare_ios_app_icons() {
     for size in "${ios_sizes_app_icon[@]}"; do
         if ! resize_image "$input_image" "${base_path}/${size}.png" "$size"; then
             printf "Error creating iOS app icon for size %s.\n" "$size" >&2
-            return 1
+            exit 1
         fi
     done
 }
@@ -75,10 +76,8 @@ prepare_asset_app_icons() {
 
     if ! resize_image "$input_image" "${base_path}/logo.png" "1200"; then
         printf "Error creating asset app icon for size 1200.\n" >&2
-        return 1
+        exit 1
     fi
-
-
 }
 
 prepare_ios_launch_images() {
@@ -97,7 +96,7 @@ prepare_ios_launch_images() {
 
         if ! resize_image "$input_image" "${base_path}/LaunchImage${suffix}.png" "$size"; then
             printf "Error creating iOS launch image for size %s.\n" "$size" >&2
-            return 1
+            exit 1
         fi
     done
 }
@@ -108,13 +107,13 @@ main() {
 
     if [[ -z "$url" ]]; then
         printf "Usage: %s <url>\n" "$(basename "$0")" >&2
-        return 1
+        exit 1
     fi
 
     local original_image="downloaded_image.png"
     if ! download_image "$url" "$original_image"; then
         printf "Error downloading the image.\n" >&2
-        return 1
+        exit 1
     fi
 
     prepare_android_icons "$original_image"
