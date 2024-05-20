@@ -104,6 +104,7 @@ prepare_ios_launch_images() {
 
 main() {
     local url=$1
+    echo "url: $url"
 
     if [[ -z "$url" ]]; then
         printf "Usage: %s <url>\n" "$(basename "$0")" >&2
