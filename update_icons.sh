@@ -4,7 +4,7 @@
 # This script downloads an image from a specified URL using curl and resizes it for Android and iOS app icons and launch images, with enhanced quality settings.
 
 set -o pipefail
-set -e  # Exit the script if any command fails
+
 
 download_image() {
     local url=$1
