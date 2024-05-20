@@ -32,7 +32,6 @@ workflows:
 
           echo "Android version code incremented to $new_version_code"
           echo "iOS build number incremented to $new_build_number"
-
         artifacts:
           - build/**/outputs/apk/**/*.apk                   # relative path for a project in root directory
           - subfolder_name/build/**/outputs/apk/**/*.apk    # relative path for a project in subfolder
@@ -46,8 +45,24 @@ workflows:
           email:
             recipients:
               -bryce.kaddouri.dublin@gmail.com
-
-
+        scripts:
+          name: Check for IOS
+          script: |
+            iosPath="ios/Runner.xcworkspace"
+            if [ -d "$iosPath" ]; then
+              echo "IOS project detected"
+            else
+              echo "IOS project not detected"
+            fi
+            name: Check for Android
+            script: |
+              androidPath="android/app"
+              if [ -d "$androidPath" ]; then
+                echo "Android project detected"
+              else
+                echo "Android project not detected"
+              fi
+            
 
 
 
