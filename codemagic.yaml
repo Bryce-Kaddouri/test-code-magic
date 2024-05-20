@@ -6,7 +6,7 @@ workflows:
       flutter: stable
       xcode: latest
       cocoapods: default
-      variables:
+      vars:
         IMAGE_URL: "https://food-order-prod.s3.eu-west-1.amazonaws.com/15/company/TjH7VHAnE2BdxATWIzmTu2UJTWOP1T9b7iqUCDnT.png"
     scripts:
       - &increment_build_number       # Defined section
