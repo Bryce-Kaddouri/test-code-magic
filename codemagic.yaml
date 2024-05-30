@@ -10,7 +10,7 @@ workflows:
         - google_play # <-- (Includes GCLOUD_SERVICE_ACCOUNT_CREDENTIALS)
       vars:
         PACKAGE_NAME: "com.bryce.kaddouri.codemagic" # <-- Put your package name here
-        GOOGLE_PLAY_TRACK: "production" # <-- Put your track here
+        GOOGLE_PLAY_TRACK: "internal" # <-- Put your track here
       flutter: stable
     scripts:
       - name: Set up local.properties
