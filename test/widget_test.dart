@@ -7,7 +7,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
+import 'package:native_screenshot/native_screenshot.dart';
 import 'package:test_code_magic/main.dart';
 
 void main() {
@@ -22,6 +22,9 @@ void main() {
     // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
+
+    String? path = await NativeScreenshot.takeScreenshot();
+    print('path: $path');
 
     // Verify that our counter has incremented.
     expect(find.text('0'), findsNothing);
